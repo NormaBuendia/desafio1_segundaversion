@@ -25,9 +25,7 @@ pipeline{
         stage ("Iniciando Modulo de terraform "){
             steps {
                 script {
-                    print '########## Configurando Credenciales... ##########'
-                    // Configura las credenciales de AWS para Terraform
-                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscredenciales', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) 
+                    print '########## Configurando Credenciales... ##########'  
                     sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
                 }
             }
