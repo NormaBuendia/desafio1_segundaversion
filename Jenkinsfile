@@ -4,7 +4,7 @@ pipeline{
     environment {
         // Define las variables de entorno para las credenciales de AWS
         AWS_KEY_SSH = credentials('clave')
-        withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscredenciales', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')])
+
     }
     parameters {
         string(name: 'TERRAFORM_MODULE', description: 'Inserte la ruta del módulo de terraform.')
