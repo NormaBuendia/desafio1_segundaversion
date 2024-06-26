@@ -17,7 +17,8 @@ pipeline{
                 script {
                     print '########## Configurando Credenciales... ##########'
                     sh 'terraform --version'
-                    sh 'ls -lt $WORKSPACE/$TERRAFORM_MODULE'
+                    //sh 'ls -lt $WORKSPACE/$TERRAFORM_MODULE'
+                    sh "ls -lt ${WORKSPACE}/${TERRAFORM_MODULE}"
                     sh 'ls -lt'             
                 }
             }
@@ -26,7 +27,8 @@ pipeline{
             steps {
                 script {
                     print '########## Configurando Credenciales... ##########'  
-                    sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
+                    //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
+                    sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE}'  
                 }
             }
             
@@ -35,7 +37,8 @@ pipeline{
             steps{
                 script {
                     print '########## Iniciando Terraform Plan... ##########'
-                    sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE plan -out=tfplan'         
+                    //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE plan -out=tfplan' 
+                    sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE} plan -out=tfplan'        
                 }
             }
           
@@ -48,13 +51,15 @@ pipeline{
                             if(!params.approve){
                                input(message:'Deseas desplegar el módulo de terraform', ok: 'Apply') 
                             }
-                            sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/'         
+                            //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/' 
+                            sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE} apply -auto-approve terraform/'         
                         }
                         else if ( params.action == 'destroy'){
                             if(!params.aprove){
                                 input(message:'Desea eliminar el módulo de terraform', ok: 'Destroy')
                             }
-                            sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/' 
+                            //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/'
+                            sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE} apply -auto-approve terraform/'  
                         }
                         else {
                             error: "Acción inválida elige una opción"
