@@ -42,24 +42,24 @@ pipeline{
         }
         stage ("Generando terraform Apply / Destroy "){
             steps{
-                script {
+               
                     print '########## Iniciando Terraform Apply / Destroy ... ##########'
                         if (params.action == 'apply') {
-                            if(!param.approve){
+                            if(!params.approve){
                                input(message:'Deseas desplegar el módulo de terraform', ok: 'Apply') 
                             }
-                            sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve'         
+                            sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/'         
                         }
                         else if ( params.action == 'destroy'){
                             if(!params.aprove){
                                 input(message:'Desea eliminar el módulo de terraform', ok: 'Destroy')
                             }
-                            sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve' 
+                            sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/' 
                         }
                         else {
                             error: "Acción inválida elige una opción"
                         }
-                }
+                
             }
         }
     }
