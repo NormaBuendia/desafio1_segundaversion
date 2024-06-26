@@ -28,7 +28,7 @@ pipeline{
                 script {
                     print '########## Iniciando Terraform... ##########'  
                     //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
-                    sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE}'  
+                    sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE} init'  
                 }
             }
             
