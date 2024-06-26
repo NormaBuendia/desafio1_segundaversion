@@ -13,11 +13,13 @@ pipeline{
     }
     stages{
         stage ("Configurando terraform "){
-            script {
+            steps{
+                script {
                     print '########## Configurando Credenciales... ##########'
                     sh 'terraform --version'
                     sh 'ls -lt $WORKSPACE/$TERRAFORM_MODULE'
                     sh 'ls -lt'             
+                }
             }
         }
         stage ("Iniciando Modulo de terraform "){
