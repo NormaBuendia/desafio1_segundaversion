@@ -42,7 +42,7 @@ pipeline{
         }
         stage ("Generando terraform Apply / Destroy "){
             steps{
-               
+                script {
                     print '########## Iniciando Terraform Apply / Destroy ... ##########'
                         if (params.action == 'apply') {
                             if(!params.approve){
@@ -59,7 +59,7 @@ pipeline{
                         else {
                             error: "Acción inválida elige una opción"
                         }
-                
+                }
             }
         }
     }
