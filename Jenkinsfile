@@ -26,7 +26,7 @@ pipeline{
         stage ("Iniciando Modulo de terraform "){
             steps {
                 script {
-                    print '########## Configurando Credenciales... ##########'  
+                    print '########## Iniciando Terraform... ##########'  
                     //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
                     sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE}'  
                 }
