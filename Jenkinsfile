@@ -7,7 +7,7 @@ pipeline {
     }
 
     parameters {
-        string(name: 'TERRAFORM_MODULE', defaultValue: '.', description: 'Inserte la ruta del módulo de terraform.')
+        string(name: 'TERRAFORM_MODULE', defaultValue: 'ec2', description: 'Inserte la ruta del módulo de terraform.')
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Aprobar automáticamente.')
         choice(name: 'action', choices: ['apply', 'destroy'], description: 'Seleccione la acción a realizar.')
     }
