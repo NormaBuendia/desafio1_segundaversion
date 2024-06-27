@@ -5,12 +5,12 @@ provider "aws" {
 }
 
 
-# instancia EC2
-resource "aws-instance" "nginx-server"{
+# Terraform main configuration file
+resource "aws_instance" "nginx-server"{
     ami= var.ami
-    instant_type = var.instant_type
+    instance_type = var.instant_type
 
-    tag={
+    tags={
         Name= var.server_name
     }
 
@@ -23,10 +23,12 @@ resource "aws-instance" "nginx-server"{
     key_name = var.key_name  # Reemplaza por el usuario en AWS para que se ejecute terraform
 
     #configurar grupo de seguridad
-    vcp_security_group_ids = [aws_security_group.nginx-sg.id]
+   vpc_security_group_ids = [aws_security_group.nginx_sg.id] 
 }
+ 
+ 
 
-resource "aws_security_group" "nginx-sg" {
+resource "aws_security_group" "nginx_sg" {
    name = var.security_group_name
    description = "Allow HTTP inboud traffic"
 
@@ -40,7 +42,7 @@ resource "aws_security_group" "nginx-sg" {
    egress {
     from_port = 0
     to_port = 0
-    protocol =-1
+    protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
     
    }

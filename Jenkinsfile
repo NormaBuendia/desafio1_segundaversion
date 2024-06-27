@@ -52,14 +52,14 @@ pipeline{
                      withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscredenciales', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         print '########## Iniciando Terraform Apply / Destroy ... ##########'
                             if (params.action == 'apply') {
-                                if(!params.approve){
+                                if(!params.autoApprove){
                                 input(message:'Deseas desplegar el módulo de terraform', ok: 'Apply') 
                                 }
                                 //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/' 
                                 sh 'terraform {action} -auto-approve'         
                             }
                             else if ( params.action == 'destroy'){
-                                if(!params.aprove){
+                                if(!params.autoApprove){
                                     input(message:'Desea eliminar el módulo de terraform', ok: 'Destroy')
                                 }
                                 //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/'
