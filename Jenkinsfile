@@ -14,7 +14,7 @@ pipeline{
         stage ("Configurando terraform "){
             steps{
                 script {
-                    print '########## Configurando Credenciales... ##########'
+                    print '########## Configurando terraform... ##########'
                     sh 'terraform --version'
                     //sh 'ls -lt $WORKSPACE/$TERRAFORM_MODULE'
                     sh "ls -lt "            
@@ -24,19 +24,24 @@ pipeline{
         stage ("Iniciando Modulo de terraform "){
             steps {
                 script {
-                    print '########## Iniciando Terraform... ##########'  
-                    //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
-                    sh 'terraform init'  
+                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscredenciales', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        print '########## Iniciando Terraform... ##########'  
+                        //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
+                        sh 'terraform init'  
+                    }
                 }
             }
             
         }
         stage ("Generando terraform plan "){
             steps{
-                script {
-                    print '########## Iniciando Terraform Plan... ##########'
-                    //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE plan -out=tfplan' 
-                    sh 'terraform plan -out=tfplan'        
+                script { 
+                    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscredenciales', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+
+                        print '########## Iniciando Terraform Plan... ##########'
+                        //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE plan -out=tfplan' 
+                        sh 'terraform plan -out=tfplan'        
+                    }
                 }
             }
           
@@ -44,24 +49,26 @@ pipeline{
         stage ("Generando terraform Apply / Destroy "){
             steps{
                 script {
-                    print '########## Iniciando Terraform Apply / Destroy ... ##########'
-                        if (params.action == 'apply') {
-                            if(!params.approve){
-                               input(message:'Deseas desplegar el módulo de terraform', ok: 'Apply') 
+                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscredenciales', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        print '########## Iniciando Terraform Apply / Destroy ... ##########'
+                            if (params.action == 'apply') {
+                                if(!params.approve){
+                                input(message:'Deseas desplegar el módulo de terraform', ok: 'Apply') 
+                                }
+                                //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/' 
+                                sh 'terraform {action} -auto-approve'         
                             }
-                            //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/' 
-                            sh 'terraform {action} -auto-approve'         
-                        }
-                        else if ( params.action == 'destroy'){
-                            if(!params.aprove){
-                                input(message:'Desea eliminar el módulo de terraform', ok: 'Destroy')
+                            else if ( params.action == 'destroy'){
+                                if(!params.aprove){
+                                    input(message:'Desea eliminar el módulo de terraform', ok: 'Destroy')
+                                }
+                                //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/'
+                                sh 'terraform {action} -auto-approve'  
                             }
-                            //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/'
-                            sh 'terraform {action} -auto-approve'  
-                        }
-                        else {
-                            error: "Acción inválida elige una opción"
-                        }
+                            else {
+                                error: "Acción inválida elige una opción"
+                            }
+                    }
                 }
             }
         }
