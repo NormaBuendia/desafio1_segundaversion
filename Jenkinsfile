@@ -29,7 +29,8 @@ pipeline {
                 script {
                     withCredentials([aws(credentialsId: 'awscredenciales', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         echo '########## Iniciando Terraform... ##########'
-                        sh "terraform init ${params.TERRAFORM_MODULE}"
+                        // sh "terraform init ${params.TERRAFORM_MODULE}"   si se guarda en S3
+                        sh "terraform init -backend=false"
                     }
                 }
             }
