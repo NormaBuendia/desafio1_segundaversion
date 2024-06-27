@@ -18,8 +18,7 @@ pipeline{
                     print '########## Configurando Credenciales... ##########'
                     sh 'terraform --version'
                     //sh 'ls -lt $WORKSPACE/$TERRAFORM_MODULE'
-                    sh "ls -lt ${WORKSPACE}/${TERRAFORM_MODULE}"
-                    sh 'ls -lt'             
+                    sh "ls -lt "            
                 }
             }
         }
@@ -28,7 +27,7 @@ pipeline{
                 script {
                     print '########## Iniciando Terraform... ##########'  
                     //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
-                    sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE} init'  
+                    sh 'terraform init'  
                 }
             }
             
@@ -38,7 +37,7 @@ pipeline{
                 script {
                     print '########## Iniciando Terraform Plan... ##########'
                     //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE plan -out=tfplan' 
-                    sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE} plan -out=tfplan'        
+                    sh 'terraform plan -out=tfplan'        
                 }
             }
           
@@ -52,14 +51,14 @@ pipeline{
                                input(message:'Deseas desplegar el módulo de terraform', ok: 'Apply') 
                             }
                             //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/' 
-                            sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE} apply -auto-approve terraform/'         
+                            sh 'terraform {action} -auto-approve'         
                         }
                         else if ( params.action == 'destroy'){
                             if(!params.aprove){
                                 input(message:'Desea eliminar el módulo de terraform', ok: 'Destroy')
                             }
                             //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/'
-                            sh 'terraform -chdir=${WORKSPACE}/${TERRAFORM_MODULE} apply -auto-approve terraform/'  
+                            sh 'terraform {action} -auto-approve'  
                         }
                         else {
                             error: "Acción inválida elige una opción"
