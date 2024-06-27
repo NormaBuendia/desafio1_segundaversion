@@ -27,7 +27,8 @@ pipeline{
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscredenciales', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         print '########## Iniciando Terraform... ##########'  
-                        sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
+                        sh 'terraform init /var/lib/jenkins/workspace/primerdesafio/'
+                        //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
                         //sh 'terraform init'  
                     }
                 }
