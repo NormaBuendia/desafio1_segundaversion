@@ -19,6 +19,7 @@ pipeline {
                     echo '########## Configurando terraform... ##########'
                     sh 'terraform --version'
                     sh "ls -lt ${params.TERRAFORM_MODULE}"
+                    sh "pwd" // Imprimir el directorio actual
                 }
             }
         }
