@@ -32,7 +32,7 @@ pipeline {
                         // sh "terraform init ${params.TERRAFORM_MODULE}"   si se guarda en S3
                        // sh "terraform init -backend=false"
                        dir("${params.TERRAFORM_MODULE}") {
-                            sh "terraform init -reconfigure"
+                            sh "terraform init"
                         }
                     }
                 }
