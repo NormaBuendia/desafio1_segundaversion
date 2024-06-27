@@ -7,6 +7,7 @@ pipeline{
 
     }
     parameters {
+              string(name: 'TERRAFORM_MODULE', description: 'Inserte la ruta del módulo de terraform.')
         booleanParam(name: 'autoApprove', defaultValue: false, description: 'Aprobar automáticamente.')
         choice(name: 'action', choices: ['apply', 'destroy'], description: 'Seleccione la acción a realizar.')
     }
@@ -16,8 +17,8 @@ pipeline{
                 script {
                     print '########## Configurando terraform... ##########'
                     sh 'terraform --version'
-                    //sh 'ls -lt $WORKSPACE/$TERRAFORM_MODULE'
-                    sh "ls -lt "            
+                    sh 'ls -lt $WORKSPACE/$TERRAFORM_MODULE'
+                    //sh "ls -lt "            
                 }
             }
         }
@@ -26,8 +27,8 @@ pipeline{
                 script {
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscredenciales', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         print '########## Iniciando Terraform... ##########'  
-                        //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
-                        sh 'terraform init'  
+                        sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE init'  
+                        //sh 'terraform init'  
                     }
                 }
             }
@@ -39,8 +40,8 @@ pipeline{
                     withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awscredenciales', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
 
                         print '########## Iniciando Terraform Plan... ##########'
-                        //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE plan -out=tfplan' 
-                        sh 'terraform plan -out=tfplan'        
+                        sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE plan -out=tfplan' 
+                        //sh 'terraform plan -out=tfplan'        
                     }
                 }
             }
@@ -55,15 +56,15 @@ pipeline{
                                 if(!params.autoApprove){
                                 input(message:'Deseas desplegar el módulo de terraform', ok: 'Apply') 
                                 }
-                                //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/' 
-                                sh 'terraform {action} -auto-approve'         
+                                sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/' 
+                                //sh 'terraform {action} -auto-approve'         
                             }
                             else if ( params.action == 'destroy'){
                                 if(!params.autoApprove){
                                     input(message:'Desea eliminar el módulo de terraform', ok: 'Destroy')
                                 }
-                                //sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/'
-                                sh 'terraform {action} -auto-approve'  
+                                sh 'terraform -chdir=$WORKSPACE/$TERRAFORM_MODULE apply -auto-approve terraform/'
+                                //sh 'terraform {action} -auto-approve'  
                             }
                             else {
                                 error: "Acción inválida elige una opción"
