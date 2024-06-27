@@ -1,4 +1,11 @@
-#proveedor
+
+# Proveedor de AWS
+provider "aws" {
+    region = "us-west-2"
+}
+
+
+# instancia EC2
 resource "aws-instance" "nginx-server"{
     ami= var.ami
     instant_type = var.instant_type
